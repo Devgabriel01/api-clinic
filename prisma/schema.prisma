@@ -7,11 +7,39 @@ datasource db {
 }
 
 model Patient {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+}
+
+model Doctor {
+  id           String        @id @default(cuid())
+  name         String
+  specialty    String
+  createdAt    DateTime      @default(now())
+  appointments Appointment[]
+}
+
+model Appointment {
   id        String   @id @default(cuid())
-  name      String
-  phone     String
+  dateTime  DateTime
+  status    String   @default("scheduled") // scheduled | cancelled | done
+  notes     String?  // observações
+
+  patientId String
+  doctorId  String
+
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([dateTime])
 }
 
 model User {
@@ -19,6 +47,6 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   @default("user")
+  role      String   @default("user") // user | admin
   createdAt DateTime @default(now())
 }

@@ -5,7 +5,10 @@ router.get("/", (req, res) => {
 });
 
 router.use("/docs", require("./docs.routes"));
-router.use("/patients", require("./patients.routes"));
 router.use("/auth", require("./auth.routes"));
+
+router.use("/patients", require("./patients.routes"));
+router.use("/doctors", require("./doctors.routes"));
+router.use("/appointments", require("./appointments.routes"));
 
 module.exports = router;
