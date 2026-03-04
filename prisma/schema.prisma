@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
 model Patient {
@@ -14,6 +13,7 @@ model Patient {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 model User {
   id        String   @id @default(cuid())
   name      String
