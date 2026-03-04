@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Clinic API
+  version: 1.0.0
+  description: API de portfólio (pacientes, agendamentos e auth)
+servers:
+  - url: http://localhost:3000
+paths:
+  /health:
+    get:
+      summary: Healthcheck
+      responses:
+        "200":
+          description: OK
+  /api/patients:
+    get:
+      summary: Listar pacientes
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Criar paciente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, phone]
+              properties:
+                name:
+                  type: string
+                  example: Maria Silva
+                phone:
+                  type: string
+                  example: 99999-0000
+      responses:
+        "201":
+          description: Criado
+        "400":
+          description: Erro de validação
+  /api/patients/{id}:
+    get:
+      summary: Buscar paciente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Não encontrado
+    delete:
+      summary: Remover paciente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Removido
