@@ -13,14 +13,29 @@ router.post("/register", async (req, res, next) => {
       return res.status(400).json({ error: "missing_fields" });
     }
 
-    const exists = await prisma.user.findUnique({ where: { email } });
-    if (exists) return res.status(409).json({ error: "email_already_in_use" });
+    const exists = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (exists) {
+      return res.status(409).json({ error: "email_already_in_use" });
+    }
 
     const hash = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
-      data: { name, email, password: hash },
-      select: { id: true, name: true, email: true, role: true, createdAt: true }
+      data: {
+        name,
+        email,
+        password: hash
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true
+      }
     });
 
     res.status(201).json(user);
@@ -37,11 +52,19 @@ router.post("/login", async (req, res, next) => {
       return res.status(400).json({ error: "missing_fields" });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: "invalid_credentials" });
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: "invalid_credentials" });
+    }
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(401).json({ error: "invalid_credentials" });
+
+    if (!valid) {
+      return res.status(401).json({ error: "invalid_credentials" });
+    }
 
     const token = jwt.sign(
       { sub: user.id, role: user.role },

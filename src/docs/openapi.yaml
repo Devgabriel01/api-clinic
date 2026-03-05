@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Clinic API
   version: 1.0.0
-  description: API de portfólio (pacientes, agendamentos e auth)
+  description: API de clínica com auth, doctors, appointments e dashboard
 servers:
   - url: http://localhost:3000
 paths:
@@ -12,55 +12,60 @@ paths:
       responses:
         "200":
           description: OK
+  /api:
+    get:
+      summary: API root
+      responses:
+        "200":
+          description: OK
+  /api/auth/login:
+    post:
+      summary: Login
+      responses:
+        "200":
+          description: OK
+  /api/auth/register:
+    post:
+      summary: Register
+      responses:
+        "201":
+          description: Created
   /api/patients:
     get:
-      summary: Listar pacientes
+      summary: List patients
       responses:
         "200":
           description: OK
     post:
-      summary: Criar paciente
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [name, phone]
-              properties:
-                name:
-                  type: string
-                  example: Maria Silva
-                phone:
-                  type: string
-                  example: 99999-0000
+      summary: Create patient
       responses:
         "201":
-          description: Criado
-        "400":
-          description: Erro de validação
-  /api/patients/{id}:
+          description: Created
+  /api/doctors:
     get:
-      summary: Buscar paciente por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      summary: List doctors
       responses:
         "200":
           description: OK
-        "404":
-          description: Não encontrado
-    delete:
-      summary: Remover paciente por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+    post:
+      summary: Create doctor
       responses:
-        "204":
-          description: Removido
+        "201":
+          description: Created
+  /api/appointments:
+    get:
+      summary: List appointments
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create appointment
+      responses:
+        "201":
+          description: Created
+  /api/dashboard/stats:
+    get:
+      summary: Dashboard stats
+      responses:
+        "200":
+          description: OK
