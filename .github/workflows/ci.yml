@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build-and-validate:
+  build-test:
     runs-on: windows-latest
 
     steps:
@@ -28,20 +28,12 @@ jobs:
 
       - name: Prisma generate
         run: npx prisma generate
+        env:
+          DATABASE_URL: "file:./dev.db"
 
-      - name: Smoke test - start server and hit /health
-        shell: pwsh
-        run: |
-          $env:PORT="3000"
-          $env:DATABASE_URL="file:./dev.db"
-          $env:JWT_SECRET="ci_secret_key"
-
-          Start-Process -NoNewWindow -FilePath "node" -ArgumentList "src/server.js"
-          Start-Sleep -Seconds 2
-
-          $res = Invoke-RestMethod "http://localhost:3000/health"
-          if (-not $res.ok) { throw "Healthcheck failed" }
-          Write-Host "Healthcheck OK"
-
-      - name: Done
-        run: echo "CI passed"
+      - name: Run tests (Jest + Supertest)
+        run: npm test
+        env:
+          PORT: "3000"
+          DATABASE_URL: "file:./dev.db"
+          JWT_SECRET: "ci_secret_key"

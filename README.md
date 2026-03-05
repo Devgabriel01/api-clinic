@@ -1,3 +1,4 @@
+![CI](https://github.com/Devgabriel01/api-clinic/actions/workflows/ci.yml/badge.svg)
 # API Clinic 🏥
 
 Backend de um sistema de clínica com autenticação JWT, RBAC (admin), Prisma + SQLite, agendamentos e dashboard.
