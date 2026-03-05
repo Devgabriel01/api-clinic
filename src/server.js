@@ -18,10 +18,18 @@ app.get("/health", (req, res) => {
 
 app.use("/api", require("./routes"));
 
+// middleware de erro SEMPRE por último
 app.use(require("./middlewares/error.middleware"));
 
-const port = process.env.PORT || 3000;
+/**
+ * Exporta o app para testes (Supertest).
+ * Só dá listen quando executado diretamente (npm run dev / npm start).
+ */
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`API Clinic running on http://localhost:${port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.log(`API Clinic running on http://localhost:${port}`);
-});
+module.exports = app;
